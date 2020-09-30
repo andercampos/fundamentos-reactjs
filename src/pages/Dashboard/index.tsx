@@ -37,18 +37,24 @@ const Dashboard: React.FC = () => {
     async function loadTransactions(): Promise<void> {
       const response = await api.get('/transactions');
 
-      const formattedTransaction = response.data.transactions.map(
+      const AllTransactions = response.data.transactions;
+
+      const balanceValues = response.data.balance;
+
+      const formattedTransaction = AllTransactions.map(
         (transaction: Transaction) => ({
           ...transaction,
           formattedValue: formatValue(transaction.value),
-          formattedDate: new Date(transaction.created_at).toLocaleDateString(),
+          formattedDate: new Date(transaction.created_at).toLocaleDateString(
+            'pt-br',
+          ),
         }),
       );
 
       const formattedBalance = {
-        income: formatValue(response.data.balance.income),
-        outcome: formatValue(response.data.balance.outcome),
-        total: formatValue(response.data.balance.total),
+        income: formatValue(balanceValues.income),
+        outcome: formatValue(balanceValues.outcome),
+        total: formatValue(balanceValues.total),
       };
 
       setTransactions(formattedTransaction);
